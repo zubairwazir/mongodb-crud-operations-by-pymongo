@@ -1,0 +1,48 @@
+Does 'admin' have admin access?
+True
+
+Is username based query possible for 'admin'?
+{'_id': ObjectId('61484f849afa055fc11c6fb9'), 'username': 'user_2', 'email': 'user_2@example.com', 'role': 'default', 'alist': [{'did': 'DT002', 'atype': 'r'}, {'did': 'DT003', 'atype': 'r'}]}
+
+Can 'admin' add a new user?
+{'_id': ObjectId('6148504c696a3885597c4a02'), 'username': 'user_3', 'email': 'user_3@example.com', 'role': 'default', 'alist': [{'did': 'DT004', 'atype': 'r'}, {'did': 'DH003', 'atype': 'rw'}]}
+
+Can 'admin' access device DT004?
+{'_id': ObjectId('61484f849afa055fc11c6fbd'), 'device_id': 'DT004', 'desc': 'Temperature Sensor', 'type': 'Temperature', 'manufacturer': 'Acme'}
+
+Can 'admin' create device DT201?
+{'_id': ObjectId('6148504c696a3885597c4a03'), 'device_id': 'DT201', 'desc': 'Temperature Sensor', 'type': 'Temperature', 'manufacturer': 'Acme'}
+
+Can 'admin' read DT001 device data?
+{'_id': ObjectId('61484f859afa055fc11c6fe9'), 'device_id': 'DT001', 'value': 27, 'timestamp': datetime.datetime(2020, 12, 2, 13, 30)}
+
+Generate daily reports
+Get daily report for one day
+{'device_id': 'DT004', 'avg_value': 23.58, 'min_value': 18, 'max_value': 27, 'date': '2020-12-02'}
+
+Get daily report for multiple days
+[{'device_id': 'DT004', 'avg_value': 23.46, 'min_value': 20, 'max_value': 28, 'date': '2020-12-03'}, {'device_id': 'DT004', 'avg_value': 23.58, 'min_value': 18, 'max_value': 27, 'date': '2020-12-02'}, {'device_id': 'DT004', 'avg_value': 23.21, 'min_value': 18, 'max_value': 26, 'date': '2020-12-04'}]
+
+Does 'user_1' have admin access?
+False
+
+Is username based query possible for 'user_1'?
+Query failed, Admin access required!
+
+Can 'user_1' add a new user?
+Insert failed, Admin access required!
+
+Can 'user_1' access device DT004?
+Read access not allowed to DT004
+
+Can 'user_1' access device DT001?
+{'_id': ObjectId('61484f849afa055fc11c6fba'), 'device_id': 'DT001', 'desc': 'Temperature Sensor', 'type': 'Temperature', 'manufacturer': 'Acme'}
+
+Can 'user_1' create device DT202?
+Insert failed, Admin access required!
+
+Can 'user_1' read DT001 device data?
+{'_id': ObjectId('61484f859afa055fc11c6fe9'), 'device_id': 'DT001', 'value': 27, 'timestamp': datetime.datetime(2020, 12, 2, 13, 30)}
+
+Can 'user_1' read DT002 device data?
+Read access not allowed to DT002 data
