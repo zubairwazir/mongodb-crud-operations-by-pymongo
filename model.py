@@ -12,15 +12,20 @@ class UserModel:
         self._db = Database()
         self._latest_error = ''
     
-    # Latest error is used to store the error string in case an issue. It's reset at the beginning of a new function call
+    # Latest error is used to store the error string in case an issue. It's reset at the beginning of a new function
+    # call
     @property
     def latest_error(self):
         return self._latest_error
     
-    # Since username should be unique in users collection, this provides a way to fetch the user document based on the username
+    # Since username should be unique in users collection, this provides a way to fetch the user document based on
+    # the username
     def find_by_username(self, username):
-        key = {'username': username}
-        return self.__find(key)
+        if username == 'admin':
+            key = {'username': username}
+            return self.__find(key)
+        else:
+            return "False"
     
     # Finds a document based on the unique auto-generated MongoDB object id 
     def find_by_object_id(self, obj_id):
@@ -32,21 +37,25 @@ class UserModel:
         user_document = self._db.get_single_data(UserModel.USER_COLLECTION, key)
         return user_document
     
-    # This first checks if a user already exists with that username. If it does, it populates latest_error and returns -1
-    # If a user doesn't already exist, it'll insert a new document and return the same to the caller
+    # This first checks if a user already exists with that username. If it does, it populates latest_error and
+    # returns -1 If a user doesn't already exist, it'll insert a new document and return the same to the caller
     def insert(self, username, email, role):
-        self._latest_error = ''
-        user_document = self.find_by_username(username)
-        if (user_document):
-            self._latest_error = f'Username {username} already exists'
-            return -1
-        
-        user_data = {'username': username, 'email': email, 'role': role}
-        user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
-        return self.find_by_object_id(user_obj_id)
+        if role == 'admin':
+            self._latest_error = ''
+            user_document = self.find_by_username(username)
+            if user_document:
+                self._latest_error = f'Username {username} already exists'
+                return -1
+
+            user_data = {'username': username, 'email': email, 'role': role}
+            user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
+            return self.find_by_object_id(user_obj_id)
+        else:
+            return "False"
 
 
-# Device document contains device_id (String), desc (String), type (String - temperature/humidity) and manufacturer (String) fields
+# Device document contains device_id (String), desc (String), type (String - temperature/humidity) and manufacturer (
+# String) fields
 class DeviceModel:
     DEVICE_COLLECTION = 'devices'
 
@@ -54,12 +63,14 @@ class DeviceModel:
         self._db = Database()
         self._latest_error = ''
     
-    # Latest error is used to store the error string in case an issue. It's reset at the beginning of a new function call
+    # Latest error is used to store the error string in case an issue. It's reset at the beginning of a new function
+    # call
     @property
     def latest_error(self):
         return self._latest_error
     
-    # Since device id should be unique in devices collection, this provides a way to fetch the device document based on the device id
+    # Since device id should be unique in devices collection, this provides a way to fetch the device document based
+    # on the device id
     def find_by_device_id(self, device_id):
         key = {'device_id': device_id}
         return self.__find(key)
@@ -79,7 +90,7 @@ class DeviceModel:
     def insert(self, device_id, desc, type, manufacturer):
         self._latest_error = ''
         device_document = self.find_by_device_id(device_id)
-        if (device_document):
+        if device_document:
             self._latest_error = f'Device id {device_id} already exists'
             return -1
         
