@@ -195,7 +195,7 @@ class WeatherDataModel:
 
 
 class DailyReportModel:
-    USER_COLLECTION = 'daily_reports'
+    REPORT_COLLECTION = 'daily_reports'
 
     def __init__(self):
         self._db = Database()
@@ -209,8 +209,8 @@ class DailyReportModel:
 
     # Since username should be unique in users collection, this provides a way to fetch the user document based on
     # the username
-    def find_by_device_id(self, device_id):
-        key = {'device_id': device_id}
+    def find_reports_by_device_id(self, device_id, date):
+        key = {'device_id': device_id, 'date': date}
         return self.__find(key)
 
     # Finds a document based on the unique auto-generated MongoDB object id
@@ -220,18 +220,5 @@ class DailyReportModel:
 
     # Private function (starting with __) to be used as the base for all find functions
     def __find(self, key):
-        user_document = self._db.get_single_data(DailyReportModel.USER_COLLECTION, key)
-        return user_document
-
-    # This first checks if a user already exists with that username. If it does, it populates latest_error and
-    # returns -1 If a user doesn't already exist, it'll insert a new document and return the same to the caller
-    def insert(self, username, email, device_id):
-        self._latest_error = ''
-        daily_report_document = self.find_by_device_id(device_id)
-        if daily_report_document:
-            self._latest_error = f'Daily Report {username} already exists'
-            return -1
-
-        user_data = {'username': username, 'email': email, 'role': role}
-        user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
-        return self.find_by_object_id(user_obj_id)
+        reports_document = self._db.get_single_data(DailyReportModel.REPORT_COLLECTION, key)
+        return reports_document
